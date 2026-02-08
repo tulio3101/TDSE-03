@@ -1,132 +1,97 @@
-# TDSE-03 — Convolutional Layers: Architecture, Bias, and Experiments
+# TDSE-03 - CIFAR-10 Image Classification: Convolutional Neural Network
 
 ## Project Title
-Exploring Convolutional Layers Through Data and Experiments
+Convolutional Neural Network Implementation for CIFAR-10
 
-## Project Description
-This project investigates how convolutional layers introduce inductive bias in neural networks. Instead of treating CNNs as black boxes, the work designs, analyzes, and tests a purposeful convolutional architecture on a real, image-based dataset. The notebook includes exploratory data analysis (EDA), a non-convolutional baseline, a custom CNN design, and controlled experiments to study a single architectural factor (e.g., kernel size or depth). The goal is to connect architectural decisions with learning behavior and interpretability.
+## Problem Description
+This project focuses on the implementation and understanding of **Convolutional Neural Networks (CNNs)** for image classification. The challenge is to classify small, low-resolution color images into one of 10 specific categories. Unlike traditional flat neural networks (Baseline), this project explores how preserving spatial structure through convolutions improves performance.
 
-## Learning Objectives
-- Understand the role and mathematical intuition behind convolutional layers.
-- Analyze how architectural decisions (kernel size, depth, stride, padding) affect learning.
-- Compare convolutional layers with fully connected layers for image-like data.
-- Perform a minimal but meaningful exploratory data analysis (EDA) for NN tasks.
-- Communicate architectural and experimental decisions clearly.
+## Dataset Description
+The dataset used is **CIFAR-10**, a standard benchmark in computer vision.
 
-## Dataset
-**Selected dataset:** _To be filled by the student._
+| Feature | Description |
+| :--- | :--- |
+| **Images** | 60,000 color images of 32x32 pixels (3 channels: RGB). |
+| **Split** | 50,000 training images and 10,000 test images. |
+| **Classes** | 10 mutually exclusive classes: *airplane, automobile, bird, cat, deer, dog, frog, horse, ship, truck*. |
+| **Preprocessing** | Normalization (0-1 range) and One-Hot Encoding for target labels. |
 
-**Why this dataset is appropriate for CNNs**
-Provide a short justification focusing on:
-- Image-based structure (2D/3D tensors)
-- Multiple classes
-- Fits in memory for local training
-
-**Dataset summary (EDA checklist)**
-- Dataset size and class distribution
-- Image dimensions and channels
-- Examples of samples per class
-- Required preprocessing (normalization, resizing, etc.)
-
-## Repository Contents
-- **Notebook:** The full analysis, models, experiments, and results.
-- **README:** This document with the project overview and results summary.
-
-## Methods
-
-### 1) Baseline Model (Non-Convolutional)
-**Architecture:** Flatten + Dense layers (no convolution).
-
-**Report in the notebook:**
-- Architecture diagram / summary
-- Number of parameters
-- Training and validation performance
-- Observed limitations
-
-### 2) Convolutional Architecture (Custom Design)
-**Design goals:** Simple but intentional.
-
-**Explicit choices to justify:**
-- Number of convolutional layers
-- Kernel sizes
-- Stride and padding
-- Activation functions
-- Pooling strategy (if any)
-
-### 3) Controlled Experiments (Single Factor)
-Select one factor and keep everything else fixed.
-
-Examples:
-- Kernel size: 3×3 vs 5×5
-- Number of filters
-- Depth: 1 vs 2 vs 3 conv layers
-- With vs without pooling
-- Effect of stride on feature maps
-
-**Report:**
-- Quantitative results (accuracy, loss)
-- Qualitative observations
-- Trade-offs (performance vs complexity)
-
-## Interpretation and Architectural Reasoning
-Answer clearly in your own words:
-- Why did convolutional layers outperform (or not) the baseline?
-- What inductive bias does convolution introduce?
-- In what problems would convolution not be appropriate?
-
-## SageMaker Deployment
-This project requires:
-- Training the model on SageMaker
-- Deploying the model to a SageMaker endpoint
-
-Include the deployment steps and endpoint testing in the notebook.
-
-## Results Summary
-Summarize key outcomes here after completing experiments:
-- Baseline vs CNN accuracy
-- Best CNN configuration
-- Key architectural insights
-
-## Getting Started
-
-### Prerequisites
-- Python 3.10+ (or the version required by your notebook)
-- Jupyter Notebook / JupyterLab
-- Deep learning framework (TensorFlow or PyTorch)
-- AWS CLI configured (for SageMaker)
-
-### Installation
-1. Create and activate a virtual environment.
-2. Install dependencies used in the notebook.
-3. Launch Jupyter and open the notebook.
-
-## Running the Notebook
-1. Open the notebook in Jupyter.
-2. Run all cells from top to bottom.
-3. Ensure results (tables/plots) are saved in the notebook.
-
-## Testing
-If you add tests, describe how to run them here.
-
-## Deployment
-Describe how the SageMaker training job and endpoint deployment are executed (links to notebook sections are acceptable).
+![alt text](docs/datasetPreview.png)
 
 ## Architecture Diagrams
-Add a simple diagram for:
-- Baseline network
-- CNN architecture
+The architecture designed is simple but intentional to demonstrate the power of convolutions without excessive depth.
+
+![alt text](image.png)
+
+**Detailed Specification:**
+1.  **Convolutional Layer**:
+    *   **Filters**: 32
+    *   **Kernel Size**: 3x3
+    *   **Stride**: 1
+    *   **Padding**: Same (maintains 32x32 spatial dim)
+    *   **Activation**: ReLU (introduces non-linearity)
+2.  **Pooling Layer**:
+    *   **Type**: Max Pooling
+    *   **Size**: 2x2
+    *   **Stride**: 2 (Reduces dimension to 16x16)
+3.  **Classification Head**:
+    *   **Flatten**: Converts 3D volume to 1D vector.
+    *   **Dense**: 10 units with **Softmax** activation for probability distribution.
+
+## Experimental Results
+We compared a Baseline Model (Fully Connected) against our CNN and explored hyperparameters.
+
+### 1. Baseline vs. CNN
+*   **Baseline Model** (Flatten + Dense Layers):
+    *   Accuracy: 43.03%
+    *   Observation: The geometry of the images is different, so a convolutional layer cannot capture the details.
+*   **CNN Model** (Our Architecture):
+    *   Accuracy: 62.85%
+    *   Observation: Including this convolutional layer, allows the model to interpret patterns from different images; however, it is worth noting that we need more layers to improve this accuracy
+
+### 2. Controlled Experiment: Kernel Size
+We tested the effect of changing the kernel size while keeping other parameters fixed.
+
+| Configuration | Kernel Size | Accuracy | Loss |  |
+| :--- | :--- | :--- | :--- | :--- |
+| **Experiment A** | **3x3** | 0.6239 | 1.1031 |  
+| **Experiment B** | **5x5** | 0.6285 | 1.0786 |  
+
+## Interpretation
+
+Changing the kernel size doesn't result in a significant improvement due to the size of the images included in the dataset.
+
+### Why did Convolutional Layers outperform the Baseline?
+
+Due to feature extraction and the implementation of a pooling strategy that highlights the most relevants pixels, helping the model identify patterns.
+
+### Inductive Bias
+
+The importance of bias lies in the fact that if, after convolution, the values are close to zero and the activation function ReLu converts them to this value, it's possible to recover image features, such as an edge.
+
+### When is Convolution NOT appropriate?
+
+The types of problems where a convolution layer would not be appropriate are when the geometric shapes of the images are simple.
+
+This will make it easier for the model to see that they have a similar pattern. This could be seen with a datset for classifying numbers where each image is the same size and they are centered, meaning their geometry does not change drastically.
+
+## Deployment (SageMaker)
+*[Space to describe your deployment steps or status]*
+- Trained model exported as a tarball.
+- Setup of inference entry point.
+- Creation of SageMaker Endpoint (or attempt thereof).
 
 ## Built With
-- Jupyter Notebook
-- Python
-- TensorFlow or PyTorch
-- AWS SageMaker
+- **NumPy**: For the "From Scratch" implementation of convolution mathematics.
+- **TensorFlow/Keras**: For efficient training and experimentation.
+- **Matplotlib**: For visualization of data and feature maps.
+- **Scikit-Learn**: For dataset splitting.
 
 ## Authors
-- Tulio
+- **Tulio Riaño Sánchez**
 
-## License
-This project is licensed under the MIT License. See LICENSE for details.
-
-## Acknowledgments
+## References
+- CIFAR-10 Dataset
+- Deep Learning Specialization (Andrew Ng)
+- CS231n: Convolutional Neural Networks for Visual Recognition
 
