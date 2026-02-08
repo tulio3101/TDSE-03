@@ -52,12 +52,14 @@ We compared a Baseline Model (Fully Connected) against our CNN and explored hype
 ### 2. Controlled Experiment: Kernel Size
 We tested the effect of changing the kernel size while keeping other parameters fixed.
 
-| Configuration | Kernel Size | Accuracy | Loss | Observations |
+| Configuration | Kernel Size | Accuracy | Loss |  |
 | :--- | :--- | :--- | :--- | :--- |
-| **Experiment A** | **3x3** | 0.6239 | 1.1031 | Captures fine details and edges effectively. |
-| **Experiment B** | **5x5** | 0.6285 | 1.0786 | *[Insert observation, e.g., May lose fine detail on small 32x32 images or result in blurrier feature maps]* |
+| **Experiment A** | **3x3** | 0.6239 | 1.1031 |  
+| **Experiment B** | **5x5** | 0.6285 | 1.0786 |  
 
 ## Interpretation
+
+Changing the kernel size doesn't result in a significant improvement due to the size of the images included in the dataset.
 
 ### Why did Convolutional Layers outperform the Baseline?
 
