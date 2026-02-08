@@ -21,7 +21,7 @@ The dataset used is **CIFAR-10**, a standard benchmark in computer vision.
 ## Architecture Diagrams
 The architecture designed is simple but intentional to demonstrate the power of convolutions without excessive depth.
 
-![alt text](image.png)
+![alt text](docs/model.png)
 
 **Detailed Specification:**
 1.  **Convolutional Layer**:
