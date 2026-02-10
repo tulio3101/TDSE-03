@@ -103,10 +103,22 @@ The types of problems where a convolution layer would not be appropriate are whe
 This will make it easier for the model to see that they have a similar pattern. This could be seen with a datset for classifying numbers where each image is the same size and they are centered, meaning their geometry does not change drastically.
 
 ## Deployment (SageMaker)
-*[Space to describe your deployment steps or status]*
-- Trained model exported as a tarball.
-- Setup of inference entry point.
-- Creation of SageMaker Endpoint (or attempt thereof).
+
+As in the previous lab, the deployment process requires us to log into AWS Academy, in the domains section.
+
+![alt text](domain.png)
+
+After that, we'll open the studio where we created the instance and we open the code editor.
+
+![alt text](codeEditor.png)
+
+In the notebook we executed all the cells respectively.
+
+![alt text](execute.png)
+
+After this we create the model where we export it in tar.gz format and route it to S3, after this we have the model and we would need to create the respective endpoint where it will generate an error due to insufficient permissions.
+
+![alt text](intentoCrearEndpointError.png)
 
 ## Built With
 - **NumPy**: For the "From Scratch" implementation of convolution mathematics.
